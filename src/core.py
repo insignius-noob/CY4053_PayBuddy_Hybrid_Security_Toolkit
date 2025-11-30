@@ -518,8 +518,8 @@ def generate_report(report_path: str = "evidence/report_PHST.txt") -> str:
     os.makedirs("evidence", exist_ok=True)
 
     # 1) Identity & consent
-    identity = read_file_content("identity.txt")
-    consent = read_file_content("consent.txt")
+    identity = read_file_content("../identity.txt")
+    consent = read_file_content("../consent.txt")
 
     # 2) Logging info
     log_file = LOG_FILE if os.path.exists(LOG_FILE) else None
