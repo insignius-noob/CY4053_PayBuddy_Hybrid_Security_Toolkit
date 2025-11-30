@@ -1,7 +1,7 @@
 Approved Targets:
 – testphp.vulnweb.com
 – OWASP 
-
+– https://juice-shop.herokuapp.com/#/
 Approved By: PHST Team (for academic lab use only)
 Date: 2025-11-29
 
