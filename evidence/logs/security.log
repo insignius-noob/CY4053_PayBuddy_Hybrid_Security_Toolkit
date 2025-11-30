@@ -21,3 +21,6 @@
 [2025-11-30 20:01:39] [consent] [INFO] Consent verified successfully
 [2025-11-30 20:02:21] [identity] [INFO] Identity verified successfully
 [2025-11-30 20:02:21] [consent] [INFO] Consent verified successfully
+[2025-11-30 20:23:11] [identity] [INFO] Identity verified successfully
+[2025-11-30 20:23:11] [consent] [INFO] Consent verified successfully
+[2025-11-30 20:23:17] [report] [INFO] Report generated at evidence/report_PHST.txt

@@ -476,3 +476,168 @@ def save_footprint_json(
             json.dump(subs_result, f, indent=2)
 
     return FOOTPRINT_DIR
+
+
+# ==========================
+# REPORT GENERATION (MUTAAL)
+# ==========================
+
+def _latest_file_in_dir(directory: str, extensions: tuple) -> str | None:
+    """
+    Helper function:
+    - Look into 'directory'
+    - Filter files that end with any of the given 'extensions'
+    - Return the full path of the most recently modified one
+    - If nothing found, return None
+    """
+    if not os.path.isdir(directory):
+        return None
+
+    files = [
+        f for f in os.listdir(directory)
+        if f.lower().endswith(extensions)
+    ]
+    if not files:
+        return None
+
+    # Pick the newest file based on modification time
+    files_full = [os.path.join(directory, f) for f in files]
+    latest = max(files_full, key=os.path.getmtime)
+    return latest
+
+
+def generate_report(report_path: str = "evidence/report_PHST.txt") -> str:
+    """
+    Auto-generate a simple text report that summarizes:
+    - Identity & consent
+    - Log file path
+    - Latest scan / footprint / stress / pcap evidence
+
+    Returns the full path of the report file.
+    """
+    os.makedirs("evidence", exist_ok=True)
+
+    # 1) Identity & consent
+    identity = read_file_content("identity.txt")
+    consent = read_file_content("consent.txt")
+
+    # 2) Logging info
+    log_file = LOG_FILE if os.path.exists(LOG_FILE) else None
+
+    # 3) Latest port scan evidence
+    latest_scan_json = _latest_file_in_dir("evidence/scans", (".json",))
+    latest_scan_html = _latest_file_in_dir("evidence/scans", (".html",))
+
+    # 4) Latest footprint evidence
+    latest_footprint_json = _latest_file_in_dir("evidence/footprint", (".json",))
+
+    # 5) Stress test evidence (latency data)
+    stress_json = _latest_file_in_dir("evidence/stress", (".json",))
+    stress_summary = None
+    if stress_json is not None:
+        try:
+            with open(stress_json, "r", encoding="utf-8") as f:
+                latencies = json.load(f)
+            if isinstance(latencies, list) and latencies:
+                avg_latency = sum(v for v in latencies if v is not None) / max(
+                    1, len([v for v in latencies if v is not None])
+                )
+                stress_summary = {
+                    "count": len(latencies),
+                    "avg_ms": round(avg_latency, 2),
+                }
+        except Exception:
+            stress_summary = None
+
+    # 6) Packet capture summary
+    pcap_summary_json = _latest_file_in_dir("evidence/pcap", (".json",))
+    pcap_summary_info = None
+    if pcap_summary_json is not None:
+        try:
+            with open(pcap_summary_json, "r", encoding="utf-8") as f:
+                pcap_data = json.load(f)
+            if isinstance(pcap_data, list):
+                pcap_summary_info = {
+                    "packet_count": len(pcap_data)
+                }
+            else:
+                pcap_summary_info = {"note": "Non-list JSON, see file for details."}
+        except Exception:
+            pcap_summary_info = None
+
+    # 7) Write the report
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    lines = []
+    lines.append("PayBuddy Hybrid Security Toolkit – Summary Report")
+    lines.append(f"Generated at: {now_str}")
+    lines.append("")
+    lines.append("=== Identity & Consent ===")
+    if identity:
+        lines.append("Identity: PRESENT")
+    else:
+        lines.append("Identity: MISSING or EMPTY")
+    if consent:
+        lines.append("Consent: PRESENT")
+    else:
+        lines.append("Consent: MISSING or EMPTY")
+    lines.append("")
+
+    lines.append("=== Logging ===")
+    if log_file:
+        lines.append(f"Security log file: {log_file}")
+    else:
+        lines.append("No security log file found.")
+    lines.append("")
+
+    lines.append("=== Port Scan Evidence ===")
+    if latest_scan_json or latest_scan_html:
+        if latest_scan_json:
+            lines.append(f"Latest scan JSON: {latest_scan_json}")
+        if latest_scan_html:
+            lines.append(f"Latest scan HTML: {latest_scan_html}")
+    else:
+        lines.append("No scan evidence files found in evidence/scans.")
+    lines.append("")
+
+    lines.append("=== Footprint Evidence ===")
+    if latest_footprint_json:
+        lines.append(f"Latest footprint JSON: {latest_footprint_json}")
+    else:
+        lines.append("No footprint evidence files found in evidence/footprint.")
+    lines.append("")
+
+    lines.append("=== HTTP Stress Test Evidence ===")
+    if stress_json and stress_summary:
+        lines.append(f"Latency JSON: {stress_json}")
+        lines.append(
+            f"Requests: {stress_summary['count']}, "
+            f"Average latency: {stress_summary['avg_ms']} ms"
+        )
+    elif stress_json:
+        lines.append(f"Latency JSON found (could not summarize): {stress_json}")
+    else:
+        lines.append("No stress test evidence found in evidence/stress.")
+    lines.append("")
+
+    lines.append("=== Packet Capture Evidence ===")
+    if pcap_summary_json and pcap_summary_info:
+        lines.append(f"PCAP summary JSON: {pcap_summary_json}")
+        if "packet_count" in pcap_summary_info:
+            lines.append(f"Packets captured (according to summary): {pcap_summary_info['packet_count']}")
+        else:
+            lines.append("See summary JSON for details.")
+    elif pcap_summary_json:
+        lines.append(f"PCAP summary JSON found (could not parse): {pcap_summary_json}")
+    else:
+        lines.append("No packet capture evidence found in evidence/pcap.")
+    lines.append("")
+
+    # Finally, write to file
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+    # Also log this event
+    log_event("report", f"Report generated at {report_path}", "INFO")
+
+    return report_path
+

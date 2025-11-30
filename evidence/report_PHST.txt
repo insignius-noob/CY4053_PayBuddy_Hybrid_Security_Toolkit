@@ -1,0 +1,24 @@
+PayBuddy Hybrid Security Toolkit – Summary Report
+Generated at: 2025-11-30 20:23:17
+
+=== Identity & Consent ===
+Identity: PRESENT
+Consent: PRESENT
+
+=== Logging ===
+Security log file: evidence/logs\security.log
+
+=== Port Scan Evidence ===
+Latest scan JSON: evidence/scans\test_scan_umer.json
+Latest scan HTML: evidence/scans\test_scan_umer.html
+
+=== Footprint Evidence ===
+Latest footprint JSON: evidence/footprint\test_footprint_umer_dirs.json
+
+=== HTTP Stress Test Evidence ===
+Latency JSON: evidence/stress\latency_data.json
+Requests: 10, Average latency: 901.74 ms
+
+=== Packet Capture Evidence ===
+PCAP summary JSON: evidence/pcap\capture_summary.json
+Packets captured (according to summary): 0

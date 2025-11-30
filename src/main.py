@@ -7,6 +7,7 @@ from core import (
     enumerate_directories,
     enumerate_subdomains,
     save_footprint_json,
+    generate_report
 )
 from register import register_user
 
@@ -20,6 +21,7 @@ def show_menu():
     print("5. Subdomain scan")
     print("6. HTTP stress test")
     print("7. Packet capture")
+    print("8. Generate summary report")
     print("0. Exit")
 
 
@@ -60,7 +62,7 @@ def main():
                 print("[ERROR] Ports must be numbers.")
                 continue
 
-            summary = run_port_scan(target, start_port, end_port)
+            summary = port_scan(target, start_port, end_port)
 
             print("\nPort scan summary:")
             print("  Target:", summary.get("target"))
@@ -133,6 +135,12 @@ def main():
             print("  PCAP file:", info.get("pcap_file"))
             print("  Summary file:", info.get("summary_file"))
             print("  Packet count:", info.get("packet_count"))
+
+        # Generating Report
+        elif choice == "8":
+            print("\n[REPORT] Generating summary report...")
+            report_path = generate_report()
+            print(f"[REPORT] Report generated at: {report_path}")
 
         # Exit
         elif choice == "0":
