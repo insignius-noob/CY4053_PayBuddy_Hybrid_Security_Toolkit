@@ -64,12 +64,6 @@
       "length": 513
     },
     {
-      "path": "/css/",
-      "status": 404,
-      "url": "https://example.com/css/",
-      "length": 513
-    },
-    {
       "path": "/css",
       "status": 404,
       "url": "https://example.com/css",
@@ -100,17 +94,11 @@
       "length": 513
     },
     {
-      "path": "/backup/",
-      "status": 404,
-      "url": "https://example.com/backup/",
-      "length": 513
-    },
-    {
       "path": "/backup",
       "status": 404,
       "url": "https://example.com/backup",
       "length": 513
     }
   ],
-  "timestamp": "2025-11-30T16:33:19"
+  "timestamp": "2025-11-30T19:39:00"
 }

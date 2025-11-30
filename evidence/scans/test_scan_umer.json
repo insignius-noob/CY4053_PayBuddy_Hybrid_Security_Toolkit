@@ -3,7 +3,7 @@
   "start_port": 70,
   "end_port": 90,
   "total_ports": 21,
-  "scan_duration_sec": 1.05,
+  "scan_duration_sec": 1.01,
   "results": [
     {
       "port": 70,

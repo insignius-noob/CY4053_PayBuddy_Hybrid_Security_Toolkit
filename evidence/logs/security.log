@@ -15,3 +15,9 @@
 [2025-11-30 18:57:22] [CONSENT] [INFO] Consent verified from consent.txt with 2 approved target(s).
 [2025-11-30 19:01:54] [IDENTITY] [INFO] Identity verified from identity.txt
 [2025-11-30 19:01:54] [CONSENT] [INFO] Consent verified from consent.txt with 2 approved target(s).
+[2025-11-30 19:38:15] [IDENTITY] [ERROR] Identity missing or empty
+[2025-11-30 19:39:03] [IDENTITY] [ERROR] Identity missing or empty
+[2025-11-30 20:01:39] [identity] [INFO] Identity verified successfully
+[2025-11-30 20:01:39] [consent] [INFO] Consent verified successfully
+[2025-11-30 20:02:21] [identity] [INFO] Identity verified successfully
+[2025-11-30 20:02:21] [consent] [INFO] Consent verified successfully
