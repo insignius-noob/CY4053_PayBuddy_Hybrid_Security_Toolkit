@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-Mutaal
-=======
-Team: OOP 2.0
+Team: PHST Paybuddy
 Members:
-- Abdul Mutaal Aashil | BSFT07-22I-0070
-- Umer Raza  | BSFT07-22I-7464
-- Syed Yahya Tariq | BSFT07-22I-2254
->>>>>>> e90229aae2eee21667708b39ddc5d45944a3825d
+- Abdul Mutaal Aashil | 22I-0070
+- Umer Raza | 22I-7474
+- Syed Yahya Tariq | 22I-2254
