@@ -1,0 +1,2 @@
+username,sha256_hash,entropy_bits
+Mutaal,0f80e7e32f2113dd3a9c34ebb2e618f070264ef6dbc4535ff60e962db3de9e05,59.54
