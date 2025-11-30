@@ -61,20 +61,19 @@ def log_event(module: str, message: str, level: str = "INFO") -> None:
 
 def password_assessment(password: str, simulate: bool = False):
     """
-    Check password strength, entropy, SHA-256 hash, and whether it matches
-    a small list of known weak passwords.
-
-    If simulate=True, run the assessment on a set of common weak passwords
-    and return a dict mapping password -> assessment result.
+    Check password strength, entropy, SHA-256 hash,
+    and mark is_weak = True if:
+      - It matches known weak hashes
+      - OR it is missing any character category
     """
+
     if simulate:
         test_passwords = ["admin123", "password", "12345678", "qwerty"]
         return {p: password_assessment(p, False) for p in test_passwords}
 
-    # 1) Length
     length = len(password)
 
-    # 2) Character categories
+    # Character categories
     categories = {
         "upper": any(c.isupper() for c in password),
         "lower": any(c.islower() for c in password),
@@ -82,7 +81,7 @@ def password_assessment(password: str, simulate: bool = False):
         "special": any(c in string.punctuation for c in password),
     }
 
-    # 3) Entropy estimation based on which character sets are used
+    # Entropy calculation
     charset_size = (
         (26 if categories["upper"] else 0) +
         (26 if categories["lower"] else 0) +
@@ -91,16 +90,21 @@ def password_assessment(password: str, simulate: bool = False):
     )
     entropy = round(length * math.log2(charset_size), 2) if charset_size > 0 else 0
 
-    # 4) Hashing with SHA-256
+    # Hashing
     hashed = hashlib.sha256(password.encode()).hexdigest()
 
-    # 5) Compare with known weak hashes
+    # Known weak password hashes
     weak_hashes = {
         hashlib.sha256("123456".encode()).hexdigest(),
         hashlib.sha256("password".encode()).hexdigest(),
         hashlib.sha256("admin123".encode()).hexdigest(),
     }
-    weak = hashed in weak_hashes
+
+    # Weak rules:
+    # If ANY category is missing → weak
+    missing_category = not all(categories.values())
+
+    weak = (hashed in weak_hashes) or missing_category
 
     return {
         "password": password,
