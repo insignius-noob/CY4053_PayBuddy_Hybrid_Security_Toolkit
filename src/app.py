@@ -111,8 +111,8 @@ section = st.sidebar.radio(
 
 # Helper to check identity + consent
 def check_identity_consent():
-    identity = read_file_content("identity.txt")
-    consent = read_file_content("consent.txt")
+    identity = read_file_content("../identity.txt")
+    consent = read_file_content("../consent.txt")
     return identity, consent
 
 
