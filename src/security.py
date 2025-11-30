@@ -3,7 +3,7 @@ from core import read_file_content, log_event
 from core import read_file_content, log_event
 
 
-def validate_identity(identity_path="identity.txt"):
+def validate_identity(identity_path="../identity.txt"):
     # Step 1: read the identity file using our helper
     identity = read_file_content(identity_path)
 
@@ -46,7 +46,7 @@ def validate_identity(identity_path="identity.txt"):
 
 
 
-def validate_consent(consent_path="consent.txt"):
+def validate_consent(consent_path="../consent.txt"):
     # Step 1: read consent file
     consent = read_file_content(consent_path)
 
