@@ -1,0 +1,114 @@
+{
+  "target": "127.0.0.1",
+  "start_port": 70,
+  "end_port": 90,
+  "total_ports": 21,
+  "scan_duration_sec": 1.05,
+  "results": [
+    {
+      "port": 70,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 71,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 72,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 73,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 74,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 75,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 76,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 77,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 78,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 79,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 80,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 81,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 82,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 83,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 84,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 85,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 86,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 87,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 88,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 89,
+      "open": false,
+      "banner": null
+    },
+    {
+      "port": 90,
+      "open": false,
+      "banner": null
+    }
+  ]
+}

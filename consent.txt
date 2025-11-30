@@ -1,1 +1,9 @@
-I understand and agree to use the PayBuddy Hybrid Security Toolkit responsibly.
+Approved Targets:
+– testphp.vulnweb.com
+– OWASP 
+
+Approved By: PHST Team (for academic lab use only)
+Date: 2025-11-29
+
+I understand and agree to only use the PayBuddy Hybrid Security Toolkit 
+on approved lab and practice targets for academic purposes.

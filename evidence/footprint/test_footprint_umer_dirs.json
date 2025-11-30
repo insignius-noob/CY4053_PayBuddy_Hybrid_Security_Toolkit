@@ -1,0 +1,116 @@
+{
+  "target": "example.com",
+  "scheme": "https",
+  "checked": 18,
+  "found": [
+    {
+      "path": "/admin/",
+      "status": 404,
+      "url": "https://example.com/admin/",
+      "length": 513
+    },
+    {
+      "path": "/admin",
+      "status": 404,
+      "url": "https://example.com/admin",
+      "length": 513
+    },
+    {
+      "path": "/login/",
+      "status": 404,
+      "url": "https://example.com/login/",
+      "length": 513
+    },
+    {
+      "path": "/login",
+      "status": 404,
+      "url": "https://example.com/login",
+      "length": 513
+    },
+    {
+      "path": "/uploads/",
+      "status": 404,
+      "url": "https://example.com/uploads/",
+      "length": 513
+    },
+    {
+      "path": "/uploads",
+      "status": 404,
+      "url": "https://example.com/uploads",
+      "length": 513
+    },
+    {
+      "path": "/images/",
+      "status": 404,
+      "url": "https://example.com/images/",
+      "length": 513
+    },
+    {
+      "path": "/images",
+      "status": 404,
+      "url": "https://example.com/images",
+      "length": 513
+    },
+    {
+      "path": "/js/",
+      "status": 404,
+      "url": "https://example.com/js/",
+      "length": 513
+    },
+    {
+      "path": "/js",
+      "status": 404,
+      "url": "https://example.com/js",
+      "length": 513
+    },
+    {
+      "path": "/css/",
+      "status": 404,
+      "url": "https://example.com/css/",
+      "length": 513
+    },
+    {
+      "path": "/css",
+      "status": 404,
+      "url": "https://example.com/css",
+      "length": 513
+    },
+    {
+      "path": "/dashboard/",
+      "status": 404,
+      "url": "https://example.com/dashboard/",
+      "length": 513
+    },
+    {
+      "path": "/dashboard",
+      "status": 404,
+      "url": "https://example.com/dashboard",
+      "length": 513
+    },
+    {
+      "path": "/api/",
+      "status": 404,
+      "url": "https://example.com/api/",
+      "length": 513
+    },
+    {
+      "path": "/api",
+      "status": 404,
+      "url": "https://example.com/api",
+      "length": 513
+    },
+    {
+      "path": "/backup/",
+      "status": 404,
+      "url": "https://example.com/backup/",
+      "length": 513
+    },
+    {
+      "path": "/backup",
+      "status": 404,
+      "url": "https://example.com/backup",
+      "length": 513
+    }
+  ],
+  "timestamp": "2025-11-30T16:33:19"
+}
