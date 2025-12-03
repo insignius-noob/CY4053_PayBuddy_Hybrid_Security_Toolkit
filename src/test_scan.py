@@ -3,7 +3,7 @@ from core import port_scan
 def main():
     print("=== TEST: PORT SCAN MODULE (UMER) ===")
 
-    # You can change this target to your lab machine or practice host.
+    
     target = "127.0.0.1"  # localhost for testing
     start_port = 70
     end_port = 90

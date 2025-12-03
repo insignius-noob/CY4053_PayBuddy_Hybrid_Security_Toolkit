@@ -356,101 +356,158 @@ def _safe_request(url: str, timeout: float = 3.0):
         return None, None, None
 
 
-def enumerate_directories(
-    target: str,
-    paths: list[str] | None = None,
-    scheme: str = "http",
-    rate_limit: float = 0.25,
-    timeout: float = 3.0
-) -> dict:
+def enumerate_directories(domain: str, prefix: str = "scan1"):
     """
-    Try common directory paths on a target host (e.g. /admin, /login).
-    Returns a dict with found paths + metadata.
+    Enumerate common directories on a target website.
+
+    - domain: e.g. "testphp.vulnweb.com" or "https://juice-shop.herokuapp.com"
+    - prefix: used to name the evidence file, e.g. "scan1" -> scan1_dirs.json
+
+    What it does:
+    1) Normalises the domain into a full URL (adds http:// if missing)
+    2) Tries a small wordlist of common paths:
+       /admin, /login, /uploads, /images, /js, /css, /dashboard
+    3) Sends HTTP GET for each path and records:
+       - full URL
+       - status code (200, 403, 404, etc.)
+       - response body length
+    4) Saves everything into evidence/footprint/<prefix>_dirs.json
+    5) Returns a dict with summary + the path of the JSON file.
     """
-    if paths is None:
-        paths = DEFAULT_PATHS
 
-    base_url = f"{scheme}://{target}".rstrip("/")
-    found = []
-    checked = 0
+    # Make sure evidence directory exists
+    os.makedirs(FOOTPRINT_DIR, exist_ok=True)
 
-    for p in paths:
-        for variant in (f"/{p}/", f"/{p}"):
-            url = base_url + variant
-            status, final_url, length = _safe_request(url, timeout=timeout)
-            checked += 1
-            if status is not None:
-                entry = {
-                    "path": variant,
-                    "status": status,
-                    "url": final_url,
-                    "length": length,
-                }
-                found.append(entry)
-            time.sleep(rate_limit)
+    # Normalise domain into a base URL
+    domain = domain.strip()
+    if not domain:
+        # No domain, nothing to do
+        return {
+            "target": None,
+            "checked": 0,
+            "paths": [],
+            "output_file": None,
+        }
 
-    result = {
-        "target": target,
-        "scheme": scheme,
-        "checked": checked,
-        "found": found,
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
-    }
-    return result
+    if not domain.startswith("http://") and not domain.startswith("https://"):
+        base_url = "http://" + domain
+    else:
+        base_url = domain
 
-
-def enumerate_subdomains(
-    base_domain: str,
-    subs: list[str] | None = None,
-    scheme: str = "http",
-    rate_limit: float = 0.25,
-    timeout: float = 3.0
-) -> dict:
-    """
-    Try resolving and requesting common subdomains like api., dev., test.
-    Returns a dict with results.
-    """
-    if subs is None:
-        subs = DEFAULT_SUBS
+    # Wordlist used for enumeration
+    wordlist = ["admin", "login", "uploads", "images", "js", "css", "dashboard"]
 
     results = []
-    checked = 0
 
-    for sub in subs:
-        host = f"{sub}.{base_domain}"
-        checked += 1
-        resolved = False
-        ip_addr = None
-        status = None
-        url = None
-
+    for p in wordlist:
+        # Build URL like http://target/admin
+        url = base_url.rstrip("/") + "/" + p
         try:
-            ip_addr = socket.gethostbyname(host)
-            resolved = True
+            resp = requests.get(url, timeout=5)
+            status = resp.status_code
+            length = len(resp.text)
         except Exception:
-            resolved = False
+            status = None
+            length = None
 
-        if resolved:
-            full_url = f"{scheme}://{host}"
-            status, url, _ = _safe_request(full_url, timeout=timeout)
+        results.append(
+            {
+                "path": "/" + p,   # for display
+                "url": url,
+                "status": status,
+                "length": length,
+            }
+        )
 
-        results.append({
-            "sub": sub,
-            "host": host,
-            "resolved": resolved,
-            "ip": ip_addr,
-            "status": status,
-            "url": url,
-        })
+    # Save JSON evidence file
+    out_path = os.path.join(FOOTPRINT_DIR, f"{prefix}_dirs.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "target": domain,
+                "checked": len(wordlist),
+                "paths": results,
+            },
+            f,
+            indent=2,
+        )
 
-        time.sleep(rate_limit)
+    # Return a summary for the UI
+    return {
+        "target": domain,
+        "checked": len(wordlist),
+        "paths": results,
+        "output_file": out_path,
+    }
+
+
+
+def enumerate_subdomains(domain: str, prefix: str = "scan1"):
+    """
+    Enumerate common subdomains for the given domain.
+
+    - domain: e.g. "owasp.org"
+    - prefix: used to name the evidence file, e.g. "scan1" -> scan1_subs.json
+
+    What it does:
+    1) Builds hostnames like:
+       www.<domain>, admin.<domain>, test.<domain>, dev.<domain>, mail.<domain>
+    2) Tries to resolve each with DNS (socket.gethostbyname)
+    3) Marks each as reachable or not
+    4) Saves everything into evidence/footprint/<prefix>_subs.json
+    5) Returns a dict with summary + the path of the JSON file.
+    """
+
+    os.makedirs(FOOTPRINT_DIR, exist_ok=True)
+
+    domain = domain.strip()
+    if not domain:
+        return {
+            "target": None,
+            "checked": 0,
+            "subdomains": [],
+            "output_file": None,
+        }
+
+    sub_list = ["www", "admin", "test", "dev", "mail"]
+    results = []
+
+    for sub in sub_list:
+        host = f"{sub}.{domain}"
+        try:
+            ip = socket.gethostbyname(host)
+            reachable = True
+        except Exception:
+            ip = None
+            reachable = False
+
+        results.append(
+            {
+                "host": host,
+                "ip": ip,
+                "reachable": reachable,
+            }
+        )
+
+    out_path = os.path.join(FOOTPRINT_DIR, f"{prefix}_subs.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "target": domain,
+                "checked": len(sub_list),
+                "subdomains": results,
+            },
+            f,
+            indent=2,
+        )
 
     return {
-        "base_domain": base_domain,
-        "checked": checked,
-        "results": results,
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "target": domain,
+        "checked": len(sub_list),
+        "subdomains": results,
+        "output_file": out_path,
     }
+
 
 
 def save_footprint_json(
